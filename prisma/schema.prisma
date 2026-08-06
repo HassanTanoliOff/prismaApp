@@ -25,6 +25,18 @@ model User{
   role Role @default(USER)
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
-
+  products Product[]
   @@map("users")
 }
+
+model Product{
+  id String @id @default(uuid())
+  product_name String 
+  product_description String @default("No description")
+  price Decimal @db.Decimal(10,2)
+  quantity Int @default(0)
+  created_by_id Int
+  created_by User @relation(fields: [created_by_id] ,references: [id])
+  @@map("products")
+}
+

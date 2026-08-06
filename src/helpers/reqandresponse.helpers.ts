@@ -1,25 +1,45 @@
 import { type Response } from "express";
-export interface ApiResponseFormat<T = unknown> {
-  success: boolean;
-  message: string;
-  error: unknown;
-  data: T;
-}
+import { type ApiResponse } from "../types/user.type.js";
 
-export const sendResponse = <T>(
-  res: Response<ApiResponseFormat<T>>,
+export function sendResponse<T>(
+  res: Response,
   status: number,
   success: boolean,
   message: string,
-  error: unknown = null,
-  data: T = null as T,
-) => {
-  const payload: ApiResponseFormat<T> = {
+  error?: String | null,
+  data?: T | null,
+): Response<ApiResponse<T>> {
+  return res.status(status).json({
     success,
     message,
-    error,
-    data,
-  };
+    error: error ?? null,
+    data: data ?? null,
+  });
+}
 
-  return res.status(status).json(payload);
-};
+
+
+// export interface ApiResponseFormat<T = unknown> {
+//   success: boolean;
+//   message: string;
+//   error?: string | null;
+//   data?: T | null;
+// }
+
+// export const sendResponse = <T>(
+//   res: Response<ApiResponseFormat<T>>,
+//   status: number,
+//   success: boolean,
+//   message: string,
+//   error?: string | null,
+//   data?: T | null,
+// ) => {
+//   const payload: ApiResponseFormat<T> = {
+//     success,
+//     message,
+//     error,
+//     data,
+//   };
+
+//   return res.status(status).json(payload);
+// };
