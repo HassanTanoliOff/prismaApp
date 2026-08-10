@@ -3,6 +3,7 @@ import prisma from "./lib/prisma.js";
 import userRouter from "./routes/user.route.js";
 import productRouter from "./routes/product.route.js";
 import cartRouter from "./routes/cart.route.js";
+import categoryRouter from "./routes/category.route.js";
 const app = express();
 
 app.use(express.json());
@@ -34,4 +35,5 @@ app.get("/api/health", async (req: Request, res: Response) => {
 app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/cart", cartRouter);
+app.use("/api/category", categoryRouter);
 export default app;
