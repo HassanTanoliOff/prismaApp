@@ -8,7 +8,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
     if (products.length == 0) {
       return sendResponse(res, 404, false, "No products found");
     }
-    return sendResponse(res, 200, true, "Products Found.",null,products);
+    return sendResponse(res, 200, true, "Products Found.", null, products);
   } catch (err) {
     if (err instanceof Error) {
       console.error("something went wrong :getAllPro", err.message);
@@ -25,13 +25,14 @@ export const getAllProducts = async (req: Request, res: Response) => {
 
 export const addProduct = async (req: Request, res: Response) => {
   try {
-    const { name, description, price, quantity, createdBy } = req.body;
+    const { name, description, price, quantity,category, createdBy } = req.body;
     const product = await addProductRepo({
       name,
       description,
       price: Number(price),
       quantity: Number(quantity),
-      createdBy: Number(createdBy),
+      category: Number(category),
+      createdBy: String(createdBy),
     });
     if (!product) {
       return sendResponse(res, 400, false, "Failed to add Product", null, {

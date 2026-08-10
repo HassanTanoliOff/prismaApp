@@ -54,13 +54,13 @@ export const updateUser = async (req: Request, res: Response) => {
     const { name, email, role } = req.body;
     const { id } = req.params;
 
-    const existingUser = await findById(Number(id));
+    const existingUser = await findById(String(id));
     if (!existingUser) {
       return sendResponse(res, 404, false, "user not found");
     }
-    
+
     const updatedUser = await updateUserRepo({
-      id: Number(id),
+      id: String(id),
       name,
       email,
       role,
@@ -87,11 +87,11 @@ export const updateUser = async (req: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const existingUser = await findById(Number(id));
+    const existingUser = await findById(String(id));
     if (!existingUser)
       return sendResponse(res, 404, false, "User does not exists");
 
-    const deletedUser = await deleteUserRepo(Number(id));
+    const deletedUser = await deleteUserRepo(String(id));
     if (!deletedUser) {
       return sendResponse(res, 400, false, "Failed to delete user.");
     }

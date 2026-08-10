@@ -1,8 +1,5 @@
 import prisma from "../lib/prisma.js";
-import {
-  type UserInput,
-  type UserUpdate,
-} from "../types/user.type.js";
+import { type UserInput, type UserUpdate } from "../types/user.type.js";
 
 export const getAllUserRepo = async () => {
   const result = await prisma.user.findMany({
@@ -12,7 +9,7 @@ export const getAllUserRepo = async () => {
   return result;
 };
 
-export const getUserByIdRepo = async (id: number) => {
+export const getUserByIdRepo = async (id: string) => {
   const result = await prisma.user.findFirst({
     where: {
       id: id,
@@ -23,7 +20,7 @@ export const getUserByIdRepo = async (id: number) => {
 export const findByEmail = async (email: string) => {
   return await prisma.user.findUnique({ where: { email, role: "USER" } });
 };
-export const findById = async (id: number) => {
+export const findById = async (id: string) => {
   return await prisma.user.findUnique({ where: { id, role: "USER" } });
 };
 export const createUserRepo = async (data: UserInput) => {
@@ -47,13 +44,13 @@ export const updateUserRepo = async (user: UserUpdate) => {
       email: user.email,
       role: user.role,
     },
-    select: { user_name: true, email: true ,role:true},
+    select: { user_name: true, email: true, role: true },
   });
 
   return result;
 };
 
-export const deleteUserRepo = async (userId: number) => {
+export const deleteUserRepo = async (userId: string) => {
   const result = await prisma.user.delete({
     where: {
       id: userId,

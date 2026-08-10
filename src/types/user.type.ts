@@ -1,4 +1,4 @@
-import type { Role } from "../generated/prisma/enums.js";
+import { Role } from "../generated/prisma/client.js";
 import { type User as PrismaUser } from "../generated/prisma/client.js";
 import { type Request } from "express";
 
@@ -7,7 +7,7 @@ export type UserInput = {
   email: string;
 };
 export type UserUpdate = {
-  id: number;
+  id: string;
   name?: string;
   email?: string;
   role?: Role;

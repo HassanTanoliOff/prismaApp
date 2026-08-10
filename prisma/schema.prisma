@@ -4,7 +4,7 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   =  "../src/generated/prisma"
 }
 
@@ -19,24 +19,96 @@ enum Role{
 }
 
 model User{
-  id Int @id @default(autoincrement())
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   user_name String
   email String @unique
   role Role @default(USER)
+
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
+
   products Product[]
+  user_products UserProduct[]
+
+  cart  Cart?
+
   @@map("users")
 }
 
 model Product{
-  id String @id @default(uuid())
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   product_name String 
   product_description String @default("No description")
+
   price Decimal @db.Decimal(10,2)
   quantity Int @default(0)
-  created_by_id Int
-  created_by User @relation(fields: [created_by_id] ,references: [id])
+
+  category_id Int? 
+  category Category? @relation(fields: [category_id],references: [id])
+
+  created_by_id String @db.Uuid
+  created_by User @relation(fields: [created_by_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  product_user UserProduct[]
+  cartItems CartItem[]
+
   @@map("products")
 }
 
+model Category{
+  id Int @id  @default(autoincrement())
+  category_name String
+  products Product[]
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("categories")
+}
+
+model UserProduct{
+  id Int @id @default(autoincrement())
+  
+  user_id String @db.Uuid
+  user User @relation(fields: [user_id],references: [id],onDelete: Cascade) 
+
+  created_at DateTime @default(now()) 
+  updated_at DateTime @default(now()) @updatedAt
+
+  product_id String @db.Uuid
+  product Product @relation(fields: [product_id],references: [id],onDelete: Cascade)
+  @@unique([user_id,product_id])
+  @@map("user_products")
+}
+
+model Cart{
+  id Int @id @default(autoincrement())
+
+  user_id String @unique @db.Uuid
+  user User @relation(fields: [user_id],references: [id],onDelete: Cascade)
+
+  items CartItem[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("carts")
+
+}
+
+model CartItem{
+  id Int @id @default(autoincrement())
+
+  cart_id Int
+  cart Cart @relation(fields: [cart_id],references: [id],onDelete: Cascade)
+
+  product_id String @db.Uuid
+  product Product  @relation(fields: [product_id],references: [id],onDelete: Cascade)
+
+  quantity Int @default(1)
+
+  @@unique([cart_id,product_id])
+  @@map("cart_items")
+}

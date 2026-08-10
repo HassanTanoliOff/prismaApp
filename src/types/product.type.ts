@@ -4,6 +4,7 @@ export interface ProductInput {
   name: string;
   description?: string;
   price: number;
+  category: number;
   quantity: number;
-  createdBy: number;
+  createdBy: string;
 }

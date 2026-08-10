@@ -13,6 +13,7 @@ export const addProductRepo = async (product: ProductInput) => {
       product_name: product.name,
       product_description: product.description,
       price: product.price,
+      category_id: product.category,
       quantity: product.quantity,
       created_by_id: product.createdBy,
     },
